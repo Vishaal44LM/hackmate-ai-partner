@@ -94,9 +94,15 @@ const PitchGenerator = () => {
           {loading && <LoadingSpinner />}
 
           {pitch && !loading && (
-            <OutputCard title="Your Winning Pitch">
-              {pitch}
-            </OutputCard>
+            <OutputCard
+              title="Your Winning Pitch"
+              content={pitch}
+              showActions={true}
+              saveData={{
+                theme: summary.slice(0, 50),
+                type: 'pitch',
+              }}
+            />
           )}
         </div>
       </div>

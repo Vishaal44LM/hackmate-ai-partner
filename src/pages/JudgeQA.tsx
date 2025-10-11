@@ -94,9 +94,15 @@ const JudgeQA = () => {
           {loading && <LoadingSpinner />}
 
           {qa && !loading && (
-            <OutputCard title="Judge Q&A Practice">
-              {qa}
-            </OutputCard>
+            <OutputCard
+              title="Judge Q&A Practice"
+              content={qa}
+              showActions={true}
+              saveData={{
+                theme: summary.slice(0, 50),
+                type: 'qa',
+              }}
+            />
           )}
         </div>
       </div>

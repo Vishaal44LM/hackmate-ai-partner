@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import OutputCard from "@/components/OutputCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { generateTeamRoles, TeamRole } from "@/lib/localStorage";
 
 const IdeaGenerator = () => {
   const [theme, setTheme] = useState("");
   const [ideas, setIdeas] = useState<string[]>([]);
+  const [teamRoles, setTeamRoles] = useState<Record<number, TeamRole[]>>({});
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -24,6 +26,7 @@ const IdeaGenerator = () => {
 
     setLoading(true);
     setIdeas([]);
+    setTeamRoles({});
 
     try {
       const response = await fetch(
@@ -44,6 +47,14 @@ const IdeaGenerator = () => {
 
       const data = await response.json();
       setIdeas(data.ideas);
+      
+      // Generate team roles for each idea
+      const roles: Record<number, TeamRole[]> = {};
+      data.ideas.forEach((_: string, index: number) => {
+        roles[index] = generateTeamRoles();
+      });
+      setTeamRoles(roles);
+      
       toast({
         title: "Ideas generated!",
         description: "Check out your AI-powered project ideas below",
@@ -102,9 +113,20 @@ const IdeaGenerator = () => {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold text-foreground mb-4">Your Project Ideas</h2>
               {ideas.map((idea, index) => (
-                <OutputCard key={index} title={`Idea ${index + 1}`}>
-                  {idea}
-                </OutputCard>
+                <OutputCard
+                  key={index}
+                  title={`Idea ${index + 1}`}
+                  content={idea}
+                  showActions={true}
+                  saveData={{
+                    theme,
+                    type: 'idea',
+                  }}
+                  teamRoles={teamRoles[index]}
+                  onTeamRolesChange={(roles) => {
+                    setTeamRoles(prev => ({ ...prev, [index]: roles }));
+                  }}
+                />
               ))}
             </div>
           )}

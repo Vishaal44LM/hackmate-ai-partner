@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Lightbulb, Expand, Megaphone, Scale } from "lucide-react";
+import { Lightbulb, Expand, Megaphone, Scale, Save } from "lucide-react";
 
 const Navigation = () => {
   const location = useLocation();
@@ -9,6 +9,7 @@ const Navigation = () => {
     { path: "/expand", label: "Expand Idea", icon: Expand },
     { path: "/pitch", label: "Pitch Generator", icon: Megaphone },
     { path: "/judge-qa", label: "Judge Q&A", icon: Scale },
+    { path: "/my-ideas", label: "My Ideas", icon: Save },
   ];
 
   return (

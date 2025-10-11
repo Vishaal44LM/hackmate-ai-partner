@@ -94,9 +94,15 @@ const ExpandIdea = () => {
           {loading && <LoadingSpinner />}
 
           {expansion && !loading && (
-            <OutputCard title="Detailed Project Breakdown">
-              {expansion}
-            </OutputCard>
+            <OutputCard
+              title="Detailed Project Breakdown"
+              content={expansion}
+              showActions={true}
+              saveData={{
+                theme: idea.slice(0, 50),
+                type: 'expansion',
+              }}
+            />
           )}
         </div>
       </div>
