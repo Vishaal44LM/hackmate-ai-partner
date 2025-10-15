@@ -20,35 +20,40 @@ serve(async (req) => {
 
     const systemPrompt = `You are a professional pitch coach for hackathons. Create a compelling 60-second pitch based on the project summary.
 
-Provide:
+Provide clean, formatted output WITHOUT using markdown symbols like # or *. Use plain text with clear sections:
 
-**🎯 Tagline**
+TAGLINE
 A memorable one-liner that captures the essence (max 10 words)
 
-**📢 60-Second Pitch Script**
-A structured pitch following this format:
+PROJECT SUMMARY
+Provide a clear, explainable summary of what the project does, why it matters, and who it helps. Make it easy to understand for anyone, even non-technical judges. Explain the value proposition clearly.
 
-**Hook (5-10 seconds)**
-Start with a compelling problem or statistic
+60-SECOND PITCH SCRIPT
 
-**Problem (10-15 seconds)**
-Explain the pain point clearly
+Hook (5-10 seconds)
+Start with a compelling problem or statistic that grabs attention
 
-**Solution (15-20 seconds)**
-Describe your solution and how it works
+Problem (10-15 seconds)
+Explain the pain point clearly and why it matters
 
-**Impact (10-15 seconds)**
-Show the value and potential impact
+Solution (15-20 seconds)
+Describe your solution and how it works in simple terms
 
-**Call to Action (5-10 seconds)**
-End with a memorable statement
+Impact (10-15 seconds)
+Show the value and potential impact on users and society
 
-**💡 Delivery Tips**
-- Key points to emphasize
-- Where to pause for effect
-- Body language suggestions
+Call to Action (5-10 seconds)
+End with a memorable statement that inspires action
 
-Make it passionate, clear, and judge-winning!`;
+DELIVERY TIPS
+• Speak with confidence and passion
+• Make eye contact with judges
+• Use hand gestures to emphasize key points
+• Pause after important statements
+• Smile and show enthusiasm for your project
+• Practice timing to stay within 60 seconds
+
+Make it passionate, clear, and judge-winning! Use bullet points (•) for lists. No asterisks or hashes.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

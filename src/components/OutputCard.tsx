@@ -1,8 +1,8 @@
-import { ReactNode, useState } from "react";
-import { Download, Copy, Save, Shuffle } from "lucide-react";
+import { ReactNode } from "react";
+import { Download, Copy, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { downloadAsText, copyToClipboard, saveIdea, generateTeamRoles, TeamRole } from "@/lib/localStorage";
+import { downloadAsText, copyToClipboard, saveIdea } from "@/lib/localStorage";
 import { useTypingAnimation } from "@/hooks/useTypingAnimation";
 
 interface OutputCardProps {
@@ -16,8 +16,6 @@ interface OutputCardProps {
     theme: string;
     type: 'idea' | 'expansion' | 'pitch' | 'qa';
   };
-  teamRoles?: TeamRole[];
-  onTeamRolesChange?: (roles: TeamRole[]) => void;
 }
 
 const OutputCard = ({ 
@@ -28,13 +26,10 @@ const OutputCard = ({
   showActions = false,
   onSave,
   saveData,
-  teamRoles,
-  onTeamRolesChange,
 }: OutputCardProps) => {
   const { toast } = useToast();
   const displayContent = content || (typeof children === 'string' ? children : '');
   const { displayedText, isComplete } = useTypingAnimation(displayContent, 15);
-  const [localTeamRoles, setLocalTeamRoles] = useState<TeamRole[]>(teamRoles || []);
 
   const handleDownload = () => {
     const filename = `hackmate-${saveData?.type || 'content'}-${Date.now()}.txt`;
@@ -66,21 +61,12 @@ const OutputCard = ({
       saveIdea({
         ...saveData,
         content: displayContent,
-        teamRoles: localTeamRoles.length > 0 ? localTeamRoles : undefined,
       });
       toast({
         title: "Saved!",
         description: "Idea saved to your collection",
       });
       if (onSave) onSave();
-    }
-  };
-
-  const handleShuffleTeam = () => {
-    const newRoles = generateTeamRoles();
-    setLocalTeamRoles(newRoles);
-    if (onTeamRolesChange) {
-      onTeamRolesChange(newRoles);
     }
   };
 
@@ -102,30 +88,6 @@ const OutputCard = ({
           <span className="inline-block w-1 h-5 bg-primary ml-1 animate-pulse" />
         )}
       </div>
-
-      {localTeamRoles.length > 0 && (
-        <div className="bg-muted/50 rounded-lg p-4 mb-4">
-          <div className="flex justify-between items-center mb-3">
-            <h4 className="text-sm font-semibold text-foreground">Suggested Team Roles</h4>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShuffleTeam}
-              className="h-8"
-            >
-              <Shuffle className="h-3 w-3 mr-1" />
-              Shuffle
-            </Button>
-          </div>
-          <div className="space-y-2">
-            {localTeamRoles.map((role, index) => (
-              <div key={index} className="text-sm text-foreground">
-                <span className="font-medium">{role.role}:</span> {role.name}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {showActions && isComplete && (
         <div className="flex gap-2 flex-wrap pt-2 border-t border-border">

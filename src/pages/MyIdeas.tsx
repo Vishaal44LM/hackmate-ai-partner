@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Save, Trash2 } from "lucide-react";
+import { Save, Trash2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getSavedIdeas, deleteIdea, SavedIdea } from "@/lib/localStorage";
+import { getSavedIdeas, deleteIdea, SavedIdea, exportProjectData } from "@/lib/localStorage";
 import OutputCard from "@/components/OutputCard";
 import { useToast } from "@/hooks/use-toast";
 
@@ -32,6 +32,23 @@ const MyIdeas = () => {
     return labels[type] || type;
   };
 
+  const handleExportProject = (theme: string) => {
+    exportProjectData(theme, savedIdeas);
+    toast({
+      title: "Project exported!",
+      description: "Your complete project has been downloaded",
+    });
+  };
+
+  // Group ideas by theme
+  const groupedIdeas = savedIdeas.reduce((acc, idea) => {
+    if (!acc[idea.theme]) {
+      acc[idea.theme] = [];
+    }
+    acc[idea.theme].push(idea);
+    return acc;
+  }, {} as Record<string, SavedIdea[]>);
+
   return (
     <div className="min-h-screen bg-[var(--gradient-subtle)]">
       <div className="container mx-auto px-4 py-12">
@@ -54,34 +71,51 @@ const MyIdeas = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {savedIdeas.map((idea) => (
-                <OutputCard
-                  key={idea.id}
-                  title={
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="text-sm text-primary font-medium">
-                          {getTypeLabel(idea.type)}
-                        </span>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Theme: {idea.theme} • {new Date(idea.timestamp).toLocaleDateString()}
+            <div className="space-y-8">
+              {Object.entries(groupedIdeas).map(([theme, ideas]) => (
+                <div key={theme} className="space-y-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-foreground">
+                      {theme}
+                    </h2>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleExportProject(theme)}
+                      className="h-9"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Full Project
+                    </Button>
+                  </div>
+                  {ideas.map((idea) => (
+                    <OutputCard
+                      key={idea.id}
+                      title={
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <span className="text-sm text-primary font-medium">
+                              {getTypeLabel(idea.type)}
+                            </span>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {new Date(idea.timestamp).toLocaleDateString()}
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(idea.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(idea.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  }
-                  content={idea.content}
-                  showActions={true}
-                  teamRoles={idea.teamRoles}
-                />
+                      }
+                      content={idea.content}
+                      showActions={true}
+                    />
+                  ))}
+                </div>
               ))}
             </div>
           )}

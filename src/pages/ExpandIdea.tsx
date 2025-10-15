@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,10 +7,18 @@ import OutputCard from "@/components/OutputCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const ExpandIdea = () => {
-  const [idea, setIdea] = useState("");
-  const [expansion, setExpansion] = useState("");
+  const [idea, setIdea] = useState(() => sessionStorage.getItem('hackmate_expand_idea') || "");
+  const [expansion, setExpansion] = useState(() => sessionStorage.getItem('hackmate_expansion') || "");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    sessionStorage.setItem('hackmate_expand_idea', idea);
+  }, [idea]);
+
+  useEffect(() => {
+    sessionStorage.setItem('hackmate_expansion', expansion);
+  }, [expansion]);
 
   const expandIdea = async () => {
     if (!idea.trim()) {

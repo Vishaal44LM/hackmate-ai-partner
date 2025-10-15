@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,10 +7,18 @@ import OutputCard from "@/components/OutputCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const PitchGenerator = () => {
-  const [summary, setSummary] = useState("");
-  const [pitch, setPitch] = useState("");
+  const [summary, setSummary] = useState(() => sessionStorage.getItem('hackmate_pitch_summary') || "");
+  const [pitch, setPitch] = useState(() => sessionStorage.getItem('hackmate_pitch') || "");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    sessionStorage.setItem('hackmate_pitch_summary', summary);
+  }, [summary]);
+
+  useEffect(() => {
+    sessionStorage.setItem('hackmate_pitch', pitch);
+  }, [pitch]);
 
   const generatePitch = async () => {
     if (!summary.trim()) {

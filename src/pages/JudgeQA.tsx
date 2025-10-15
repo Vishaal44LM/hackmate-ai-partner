@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,10 +7,18 @@ import OutputCard from "@/components/OutputCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const JudgeQA = () => {
-  const [summary, setSummary] = useState("");
-  const [qa, setQa] = useState("");
+  const [summary, setSummary] = useState(() => sessionStorage.getItem('hackmate_qa_summary') || "");
+  const [qa, setQa] = useState(() => sessionStorage.getItem('hackmate_qa') || "");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    sessionStorage.setItem('hackmate_qa_summary', summary);
+  }, [summary]);
+
+  useEffect(() => {
+    sessionStorage.setItem('hackmate_qa', qa);
+  }, [qa]);
 
   const generateQA = async () => {
     if (!summary.trim()) {

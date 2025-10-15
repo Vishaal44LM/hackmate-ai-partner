@@ -4,12 +4,6 @@ export interface SavedIdea {
   content: string;
   type: 'idea' | 'expansion' | 'pitch' | 'qa';
   timestamp: number;
-  teamRoles?: TeamRole[];
-}
-
-export interface TeamRole {
-  role: string;
-  name: string;
 }
 
 const STORAGE_KEY = 'hackmate_saved_ideas';
@@ -36,28 +30,50 @@ export const deleteIdea = (id: string): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(existing.filter(i => i.id !== id)));
 };
 
-export const generateTeamRoles = (): TeamRole[] => {
-  const roles = [
-    'Frontend Developer',
-    'Backend Developer',
-    'AI/ML Engineer',
-    'UI/UX Designer',
-    'Product Manager',
-    'DevOps Engineer',
-  ];
+export const exportProjectData = (projectTheme: string, ideas: SavedIdea[]): void => {
+  const projectIdeas = ideas.filter(i => i.theme === projectTheme);
   
-  const names = [
-    'Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank',
-    'Grace', 'Henry', 'Ivy', 'Jack', 'Kate', 'Leo',
-  ];
+  let content = `HACKMATE PROJECT EXPORT\n`;
+  content += `========================\n\n`;
+  content += `Project: ${projectTheme}\n`;
+  content += `Exported: ${new Date().toLocaleString()}\n\n`;
+  content += `========================\n\n`;
   
-  const selectedRoles = roles.sort(() => Math.random() - 0.5).slice(0, 3 + Math.floor(Math.random() * 2));
-  const shuffledNames = [...names].sort(() => Math.random() - 0.5);
+  const ideaContent = projectIdeas.find(i => i.type === 'idea');
+  const expansionContent = projectIdeas.find(i => i.type === 'expansion');
+  const pitchContent = projectIdeas.find(i => i.type === 'pitch');
+  const qaContent = projectIdeas.find(i => i.type === 'qa');
   
-  return selectedRoles.map((role, index) => ({
-    role,
-    name: shuffledNames[index],
-  }));
+  if (ideaContent) {
+    content += `PROJECT IDEA\n`;
+    content += `============\n\n`;
+    content += `${ideaContent.content}\n\n`;
+    content += `========================\n\n`;
+  }
+  
+  if (expansionContent) {
+    content += `EXPANDED PLAN\n`;
+    content += `=============\n\n`;
+    content += `${expansionContent.content}\n\n`;
+    content += `========================\n\n`;
+  }
+  
+  if (pitchContent) {
+    content += `PITCH SCRIPT\n`;
+    content += `============\n\n`;
+    content += `${pitchContent.content}\n\n`;
+    content += `========================\n\n`;
+  }
+  
+  if (qaContent) {
+    content += `JUDGE Q&A PRACTICE\n`;
+    content += `==================\n\n`;
+    content += `${qaContent.content}\n\n`;
+    content += `========================\n\n`;
+  }
+  
+  const filename = `hackmate-${projectTheme.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${Date.now()}.txt`;
+  downloadAsText(content, filename);
 };
 
 export const downloadAsText = (content: string, filename: string): void => {

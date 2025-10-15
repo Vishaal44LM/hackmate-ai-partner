@@ -20,15 +20,24 @@ serve(async (req) => {
 
     const systemPrompt = `You are an expert hackathon mentor. Generate 3-5 unique, innovative project ideas based on the given theme. 
 
-For each idea, provide:
-- **Project Title**: A catchy, memorable name
-- **Problem**: What problem does this solve?
-- **Solution**: Brief description of your approach
-- **Tech Stack**: Key technologies to use
-- **Difficulty**: Easy, Medium, or Hard
-- **Why It's Unique**: What makes this stand out
+For each idea, provide clean, formatted output WITHOUT using markdown symbols like # or *. Use plain text with clear sections:
 
-Format each idea clearly and make them exciting and achievable within 36 hours.`;
+PROJECT TITLE: A catchy, memorable name
+
+PROBLEM: What problem does this solve?
+
+SOLUTION: Brief description of your approach
+
+TECH STACK:
+• Frontend technology
+• Backend technology
+• Key APIs/services
+
+DIFFICULTY: Easy, Medium, or Hard
+
+WHY IT'S UNIQUE: What makes this stand out
+
+Separate each idea with a blank line. Format everything cleanly without asterisks, hashes, or markdown symbols. Use bullet points (•) for lists.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

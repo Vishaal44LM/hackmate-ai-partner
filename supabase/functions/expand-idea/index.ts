@@ -20,37 +20,53 @@ serve(async (req) => {
 
     const systemPrompt = `You are a hackathon project planner. Expand the given project idea into a comprehensive plan.
 
-Provide a detailed breakdown with these sections:
+Provide a detailed breakdown WITHOUT using markdown symbols like # or *. Use plain text with clear sections and bullet points (•):
 
-**🎯 Problem Statement**
+PROBLEM STATEMENT
 Clear description of the problem being solved
 
-**💡 Proposed Solution**
+PROPOSED SOLUTION
 Detailed explanation of how the project solves the problem
 
-**🛠️ Tech Stack**
-- Frontend technologies
-- Backend technologies
-- APIs/Services needed
-- Database requirements
+TECH STACK
+• Frontend technologies
+• Backend technologies
+• APIs/Services needed
+• Database requirements
 
-**👥 Team Roles**
-Suggested roles and responsibilities for a 2-4 person team
+36-HOUR TIMELINE
 
-**⏱️ 36-Hour Timeline**
-Hour-by-hour breakdown:
-- Hours 0-6: Setup and initial development
-- Hours 6-18: Core feature implementation
-- Hours 18-30: Integration and testing
-- Hours 30-36: Polish, presentation prep, and deployment
+Hours 0-6: Setup and Initial Development
+• Set up development environment
+• Initialize project structure
+• Create basic UI framework
 
-**🎨 Key Features (MVP)**
-List of must-have features for the hackathon demo
+Hours 6-18: Core Feature Implementation
+• Build main functionality
+• Integrate APIs and services
+• Implement key user workflows
 
-**🚀 Future Enhancements**
-Features to add after the hackathon
+Hours 18-30: Integration and Testing
+• Connect frontend and backend
+• Test core features
+• Fix critical bugs
 
-Make it actionable and realistic for a 36-hour hackathon!`;
+Hours 30-36: Polish and Presentation
+• Refine UI/UX
+• Prepare demo and pitch
+• Deploy to production
+
+KEY FEATURES (MVP)
+• List of must-have features for the hackathon demo
+• Each feature described clearly
+• Prioritized for 36-hour timeline
+
+FUTURE ENHANCEMENTS
+• Features to add after the hackathon
+• Scalability improvements
+• Additional functionality
+
+Make it actionable and realistic for a 36-hour hackathon! Use bullet points (•) and clean formatting without asterisks or hashes.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

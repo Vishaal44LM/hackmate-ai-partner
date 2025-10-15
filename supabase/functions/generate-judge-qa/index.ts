@@ -20,44 +20,47 @@ serve(async (req) => {
 
     const systemPrompt = `You are an experienced hackathon judge. Generate challenging but fair questions that judges typically ask, along with strong sample answers.
 
-Create 5 realistic Q&A pairs covering:
+Provide clean, formatted Q&A WITHOUT using markdown symbols like # or *. Use plain text with clear structure:
 
-**❓ Question 1: Technical Implementation**
-Focus on how the solution was built
+QUESTION 1: TECHNICAL IMPLEMENTATION
+How did you build this solution? What technologies did you use and why?
 
-**💬 Sample Answer 1:**
-A clear, confident response addressing the technical approach
+ANSWER 1:
+A clear, confident response addressing the technical approach, architecture decisions, and technology choices. Explain the reasoning behind key technical decisions.
 
-**❓ Question 2: Scalability & Future**
-Ask about growth potential and next steps
+QUESTION 2: SCALABILITY AND FUTURE PLANS
+How would this scale to serve thousands of users? What are your next steps?
 
-**💬 Sample Answer 2:**
-Demonstrate vision and planning
+ANSWER 2:
+Demonstrate vision and planning for growth. Discuss infrastructure considerations, performance optimization, and roadmap for future development.
 
-**❓ Question 3: Market/User Impact**
-Question about real-world application
+QUESTION 3: MARKET AND USER IMPACT
+Who are your target users and how does this solve their real problems?
 
-**💬 Sample Answer 3:**
-Show understanding of user needs
+ANSWER 3:
+Show deep understanding of user needs and pain points. Provide specific examples of how users would benefit from this solution.
 
-**❓ Question 4: Challenges Faced**
-What problems did they overcome?
+QUESTION 4: CHALLENGES FACED
+What was the biggest challenge you encountered and how did you overcome it?
 
-**💬 Sample Answer 4:**
-Honest but positive response
+ANSWER 4:
+Honest but positive response showing problem-solving skills. Highlight learning and adaptability during the hackathon.
 
-**❓ Question 5: Differentiation**
-What makes this unique?
+QUESTION 5: DIFFERENTIATION
+What makes your solution unique compared to existing alternatives?
 
-**💬 Sample Answer 5:**
-Clear competitive advantage
+ANSWER 5:
+Clear articulation of competitive advantage and unique value proposition. Explain what sets this project apart.
 
-**🎯 Practice Tips:**
-- How to handle questions you don't know
-- Body language suggestions
-- Time management advice
+PRACTICE TIPS
+• Take a breath before answering each question
+• Be honest if you don't know something, then explain how you'd find out
+• Show enthusiasm and confidence in your voice
+• Make eye contact with all judges
+• Keep answers concise but complete (30-60 seconds each)
+• End each answer on a positive note
 
-Make questions realistic and answers inspiring!`;
+Make questions realistic and answers inspiring! Use bullet points (•) for lists. No asterisks or hashes.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
