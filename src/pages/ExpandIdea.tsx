@@ -10,6 +10,9 @@ const ExpandIdea = () => {
   const [idea, setIdea] = useState(() => sessionStorage.getItem('hackmate_expand_idea') || "");
   const [expansion, setExpansion] = useState(() => sessionStorage.getItem('hackmate_expansion') || "");
   const [loading, setLoading] = useState(false);
+  const [hasGeneratedOnce, setHasGeneratedOnce] = useState(() => {
+    return sessionStorage.getItem('hackmate_expansion') !== null;
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,6 +35,7 @@ const ExpandIdea = () => {
 
     setLoading(true);
     setExpansion("");
+    setHasGeneratedOnce(false);
 
     try {
       const response = await fetch(
@@ -52,6 +56,7 @@ const ExpandIdea = () => {
 
       const data = await response.json();
       setExpansion(data.expansion);
+      setHasGeneratedOnce(true);
       toast({
         title: "Idea expanded!",
         description: "Your detailed project breakdown is ready",
@@ -92,7 +97,8 @@ const ExpandIdea = () => {
             <Button
               onClick={expandIdea}
               disabled={loading}
-              className="w-full h-12 bg-[var(--gradient-primary)] hover:opacity-90"
+              variant="gradient"
+              className="w-full h-12"
             >
               <Expand className="mr-2 h-5 w-5" />
               Expand Idea
@@ -109,6 +115,7 @@ const ExpandIdea = () => {
               saveData={{
                 theme: idea.slice(0, 50),
                 type: 'expansion',
+                skipAnimation: hasGeneratedOnce,
               }}
             />
           )}

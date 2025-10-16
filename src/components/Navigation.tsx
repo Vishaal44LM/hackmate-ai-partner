@@ -1,15 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
-import { Lightbulb, Expand, Megaphone, Scale, Save } from "lucide-react";
+import { Sparkles, Lightbulb, Megaphone, Scale, BookmarkCheck } from "lucide-react";
 
 const Navigation = () => {
   const location = useLocation();
   
   const navItems = [
-    { path: "/", label: "Idea Generator", icon: Lightbulb },
-    { path: "/expand", label: "Expand Idea", icon: Expand },
-    { path: "/pitch", label: "Pitch Generator", icon: Megaphone },
+    { path: "/ideas", label: "Ideas", icon: Sparkles },
+    { path: "/expand", label: "Expand", icon: Lightbulb },
+    { path: "/pitch", label: "Pitch", icon: Megaphone },
     { path: "/judge-qa", label: "Judge Q&A", icon: Scale },
-    { path: "/my-ideas", label: "My Ideas", icon: Save },
+    { path: "/my-ideas", label: "My Ideas", icon: BookmarkCheck },
   ];
 
   return (
@@ -17,7 +17,7 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 font-bold text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            <Lightbulb className="h-6 w-6 text-primary" />
+            <Sparkles className="h-6 w-6 text-primary" />
             HackMate
           </Link>
           

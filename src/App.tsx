@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import ProgressBar from "./components/ProgressBar";
+import Home from "./pages/Home";
 import IdeaGenerator from "./pages/IdeaGenerator";
 import ExpandIdea from "./pages/ExpandIdea";
 import PitchGenerator from "./pages/PitchGenerator";
@@ -23,7 +24,8 @@ const App = () => (
         <Navigation />
         <ProgressBar />
         <Routes>
-          <Route path="/" element={<IdeaGenerator />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/ideas" element={<IdeaGenerator />} />
           <Route path="/expand" element={<ExpandIdea />} />
           <Route path="/pitch" element={<PitchGenerator />} />
           <Route path="/judge-qa" element={<JudgeQA />} />

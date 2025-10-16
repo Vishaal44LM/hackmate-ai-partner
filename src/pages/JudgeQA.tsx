@@ -10,6 +10,9 @@ const JudgeQA = () => {
   const [summary, setSummary] = useState(() => sessionStorage.getItem('hackmate_qa_summary') || "");
   const [qa, setQa] = useState(() => sessionStorage.getItem('hackmate_qa') || "");
   const [loading, setLoading] = useState(false);
+  const [hasGeneratedOnce, setHasGeneratedOnce] = useState(() => {
+    return sessionStorage.getItem('hackmate_qa') !== null;
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,6 +35,7 @@ const JudgeQA = () => {
 
     setLoading(true);
     setQa("");
+    setHasGeneratedOnce(false);
 
     try {
       const response = await fetch(
@@ -52,6 +56,7 @@ const JudgeQA = () => {
 
       const data = await response.json();
       setQa(data.qa);
+      setHasGeneratedOnce(true);
       toast({
         title: "Q&A generated!",
         description: "Practice these questions before presenting",
@@ -92,7 +97,8 @@ const JudgeQA = () => {
             <Button
               onClick={generateQA}
               disabled={loading}
-              className="w-full h-12 bg-[var(--gradient-primary)] hover:opacity-90"
+              variant="gradient"
+              className="w-full h-12"
             >
               <Scale className="mr-2 h-5 w-5" />
               Generate Q&A
@@ -109,6 +115,7 @@ const JudgeQA = () => {
               saveData={{
                 theme: summary.slice(0, 50),
                 type: 'qa',
+                skipAnimation: hasGeneratedOnce,
               }}
             />
           )}

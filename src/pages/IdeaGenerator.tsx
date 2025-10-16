@@ -12,7 +12,14 @@ const IdeaGenerator = () => {
     const saved = sessionStorage.getItem('hackmate_ideas');
     return saved ? JSON.parse(saved) : [];
   });
+  const [themeHistory, setThemeHistory] = useState<string[]>(() => {
+    const saved = localStorage.getItem('hackmate_theme_history');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [loading, setLoading] = useState(false);
+  const [hasGeneratedOnce, setHasGeneratedOnce] = useState(() => {
+    return sessionStorage.getItem('hackmate_ideas') !== null;
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -35,6 +42,7 @@ const IdeaGenerator = () => {
 
     setLoading(true);
     setIdeas([]);
+    setHasGeneratedOnce(false);
 
     try {
       const response = await fetch(
@@ -55,6 +63,14 @@ const IdeaGenerator = () => {
 
       const data = await response.json();
       setIdeas(data.ideas);
+      setHasGeneratedOnce(true);
+      
+      // Save theme to history
+      if (!themeHistory.includes(theme)) {
+        const newHistory = [theme, ...themeHistory].slice(0, 10);
+        setThemeHistory(newHistory);
+        localStorage.setItem('hackmate_theme_history', JSON.stringify(newHistory));
+      }
       
       toast({
         title: "Ideas generated!",
@@ -89,18 +105,29 @@ const IdeaGenerator = () => {
               Enter your hackathon theme or domain
             </label>
             <div className="flex gap-3">
-              <Input
-                type="text"
-                placeholder="e.g., EduTech, AI for Social Good, IoT"
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && generateIdeas()}
-                className="flex-1 h-12"
-              />
+              <div className="flex-1 relative">
+                <Input
+                  type="text"
+                  placeholder="e.g., EduTech, AI for Social Good, IoT"
+                  value={theme}
+                  onChange={(e) => setTheme(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && generateIdeas()}
+                  className="h-12"
+                  list="theme-history"
+                />
+                {themeHistory.length > 0 && (
+                  <datalist id="theme-history">
+                    {themeHistory.map((t, i) => (
+                      <option key={i} value={t} />
+                    ))}
+                  </datalist>
+                )}
+              </div>
               <Button
                 onClick={generateIdeas}
                 disabled={loading}
-                className="h-12 px-8 bg-[var(--gradient-primary)] hover:opacity-90"
+                variant="gradient"
+                className="h-12 px-8"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
                 Generate Ideas
@@ -122,6 +149,7 @@ const IdeaGenerator = () => {
                   saveData={{
                     theme,
                     type: 'idea',
+                    skipAnimation: hasGeneratedOnce,
                   }}
                 />
               ))}

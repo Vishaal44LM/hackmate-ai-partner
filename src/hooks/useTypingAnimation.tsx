@@ -1,13 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-export const useTypingAnimation = (text: string, speed: number = 20) => {
+export const useTypingAnimation = (text: string, speed: number = 20, skipAnimation: boolean = false) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
     if (!text) {
       setDisplayedText('');
       setIsComplete(false);
+      hasAnimatedRef.current = false;
+      return;
+    }
+
+    // Skip animation if content was cached or skipAnimation is true
+    if (skipAnimation || hasAnimatedRef.current) {
+      setDisplayedText(text);
+      setIsComplete(true);
       return;
     }
 
@@ -21,12 +30,13 @@ export const useTypingAnimation = (text: string, speed: number = 20) => {
         currentIndex++;
       } else {
         setIsComplete(true);
+        hasAnimatedRef.current = true;
         clearInterval(interval);
       }
     }, speed);
 
     return () => clearInterval(interval);
-  }, [text, speed]);
+  }, [text, speed, skipAnimation]);
 
   return { displayedText, isComplete };
 };

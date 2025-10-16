@@ -10,6 +10,9 @@ const PitchGenerator = () => {
   const [summary, setSummary] = useState(() => sessionStorage.getItem('hackmate_pitch_summary') || "");
   const [pitch, setPitch] = useState(() => sessionStorage.getItem('hackmate_pitch') || "");
   const [loading, setLoading] = useState(false);
+  const [hasGeneratedOnce, setHasGeneratedOnce] = useState(() => {
+    return sessionStorage.getItem('hackmate_pitch') !== null;
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,6 +35,7 @@ const PitchGenerator = () => {
 
     setLoading(true);
     setPitch("");
+    setHasGeneratedOnce(false);
 
     try {
       const response = await fetch(
@@ -52,6 +56,7 @@ const PitchGenerator = () => {
 
       const data = await response.json();
       setPitch(data.pitch);
+      setHasGeneratedOnce(true);
       toast({
         title: "Pitch generated!",
         description: "Your winning pitch is ready",
@@ -92,7 +97,8 @@ const PitchGenerator = () => {
             <Button
               onClick={generatePitch}
               disabled={loading}
-              className="w-full h-12 bg-[var(--gradient-primary)] hover:opacity-90"
+              variant="gradient"
+              className="w-full h-12"
             >
               <Megaphone className="mr-2 h-5 w-5" />
               Generate Pitch
@@ -109,6 +115,7 @@ const PitchGenerator = () => {
               saveData={{
                 theme: summary.slice(0, 50),
                 type: 'pitch',
+                skipAnimation: hasGeneratedOnce,
               }}
             />
           )}

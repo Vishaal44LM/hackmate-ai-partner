@@ -15,6 +15,7 @@ interface OutputCardProps {
   saveData?: {
     theme: string;
     type: 'idea' | 'expansion' | 'pitch' | 'qa';
+    skipAnimation?: boolean;
   };
 }
 
@@ -29,7 +30,8 @@ const OutputCard = ({
 }: OutputCardProps) => {
   const { toast } = useToast();
   const displayContent = content || (typeof children === 'string' ? children : '');
-  const { displayedText, isComplete } = useTypingAnimation(displayContent, 15);
+  const skipAnimation = saveData?.skipAnimation || false;
+  const { displayedText, isComplete } = useTypingAnimation(displayContent, 15, skipAnimation);
 
   const handleDownload = () => {
     const filename = `hackmate-${saveData?.type || 'content'}-${Date.now()}.txt`;
