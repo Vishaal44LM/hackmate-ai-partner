@@ -18,7 +18,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are an expert hackathon mentor. Generate 3-5 unique, innovative project ideas based on the given theme. 
+    const systemPrompt = `You are an expert hackathon mentor. Generate exactly 4-5 unique, innovative project ideas based on the given theme. 
 
 For each idea, provide clean, formatted output WITHOUT using markdown symbols like # or *. Use plain text with clear sections:
 
@@ -37,7 +37,7 @@ DIFFICULTY: Easy, Medium, or Hard
 
 WHY IT'S UNIQUE: What makes this stand out
 
-Separate each idea with a blank line. Format everything cleanly without asterisks, hashes, or markdown symbols. Use bullet points (•) for lists.`;
+Separate each idea with "---IDEA_SEPARATOR---" on its own line. Format everything cleanly without asterisks, hashes, or markdown symbols. Use bullet points (•) for lists.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -66,10 +66,11 @@ Separate each idea with a blank line. Format everything cleanly without asterisk
     const data = await response.json();
     const content = data.choices[0].message.content;
     
-    // Split the content into individual ideas
-    const ideas = content.split(/(?=\*\*Project Title|\d+\.\s+\*\*)/g)
-      .filter((idea: string) => idea.trim().length > 50)
-      .map((idea: string) => idea.trim());
+    // Split the content into individual ideas using the separator
+    const ideas = content
+      .split('---IDEA_SEPARATOR---')
+      .map((idea: string) => idea.trim())
+      .filter((idea: string) => idea.length > 50);
 
     return new Response(JSON.stringify({ ideas }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
