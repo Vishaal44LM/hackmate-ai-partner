@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import OutputCard from "@/components/OutputCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { callEdgeFunctionWithRetry } from "@/lib/edgeFunctions";
 
 const PitchGenerator = () => {
   const [summary, setSummary] = useState(() => sessionStorage.getItem('hackmate_pitch_summary') || "");
@@ -38,23 +39,11 @@ const PitchGenerator = () => {
     setHasGeneratedOnce(false);
 
     try {
-      const response = await fetch(
+      const data = await callEdgeFunctionWithRetry(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-pitch`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ summary }),
-        }
+        { summary }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to generate pitch");
-      }
-
-      const data = await response.json();
       setPitch(data.pitch);
       setHasGeneratedOnce(true);
       toast({

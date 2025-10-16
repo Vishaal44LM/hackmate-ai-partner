@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import OutputCard from "@/components/OutputCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { callEdgeFunctionWithRetry } from "@/lib/edgeFunctions";
 
 const ExpandIdea = () => {
   const [idea, setIdea] = useState(() => sessionStorage.getItem('hackmate_expand_idea') || "");
@@ -38,23 +39,11 @@ const ExpandIdea = () => {
     setHasGeneratedOnce(false);
 
     try {
-      const response = await fetch(
+      const data = await callEdgeFunctionWithRetry(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/expand-idea`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ idea }),
-        }
+        { idea }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to expand idea");
-      }
-
-      const data = await response.json();
       setExpansion(data.expansion);
       setHasGeneratedOnce(true);
       toast({
