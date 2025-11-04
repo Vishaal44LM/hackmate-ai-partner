@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.generate-judge-qa]
 verify_jwt = false
+
+[functions.ai-room-moderator]
+verify_jwt = false

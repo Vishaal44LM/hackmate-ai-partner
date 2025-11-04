@@ -11,6 +11,9 @@ import ExpandIdea from "./pages/ExpandIdea";
 import PitchGenerator from "./pages/PitchGenerator";
 import JudgeQA from "./pages/JudgeQA";
 import MyIdeas from "./pages/MyIdeas";
+import Auth from "./pages/Auth";
+import IdeationRooms from "./pages/IdeationRooms";
+import IdeationRoom from "./pages/IdeationRoom";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +33,9 @@ const App = () => (
           <Route path="/pitch" element={<PitchGenerator />} />
           <Route path="/judge-qa" element={<JudgeQA />} />
           <Route path="/my-ideas" element={<MyIdeas />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/ideation-rooms" element={<IdeationRooms />} />
+          <Route path="/ideation-rooms/:roomId" element={<IdeationRoom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">

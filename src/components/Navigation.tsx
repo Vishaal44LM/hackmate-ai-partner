@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Sparkles, Lightbulb, Megaphone, Scale, BookmarkCheck } from "lucide-react";
+import { Sparkles, Lightbulb, Megaphone, Scale, BookmarkCheck, Users } from "lucide-react";
 
 const Navigation = () => {
   const location = useLocation();
@@ -10,6 +10,7 @@ const Navigation = () => {
     { path: "/pitch", label: "Pitch", icon: Megaphone },
     { path: "/judge-qa", label: "Judge Q&A", icon: Scale },
     { path: "/my-ideas", label: "My Ideas", icon: BookmarkCheck },
+    { path: "/ideation-rooms", label: "Rooms", icon: Users },
   ];
 
   return (
